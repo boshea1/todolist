@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.visible {
+visibility:visible;
+color:green;
+}
+
+.hide{
+    visibility:visible;
+    color:red;
+    }
+
