@@ -1,37 +1,58 @@
 import React,{useState} from 'react'
 import Todo from './Todo'
+import TodoForm from './TodoForm'
 
 const Todos = () => {
-    const [todo,setTodo] = useState('')
     const [todos,setTodos] = useState([])
 
-    const handleDelete = (e) => {
-      console.log('todospre',todos)
-      console.log('todo.splice',todos.splice(e.target.id,1))
-      setTodos(todos)
-      console.log('todos', todos)
+    const addTodo = todo => {
+      if (!todo.text || /^\s*$/.test(todo.text)) {
+        return;
       }
+  
+      const newTodos = [todo, ...todos];
+  
+      setTodos(newTodos);
+      console.log(...todos);
+    };
     
-        const handleChange = (e) => {
-        setTodo(e.target.value)
+    const updateTodo = (todoId, newValue) => {
+      if (!newValue.text || /^\s*$/.test(newValue.text)) {
+        return;
+      }
+      
+      setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
+    };
+    
+    const removeTodo = id => {
+      const removedArr = [...todos].filter(todo => todo.id !== parseInt(id.target.id));
+      setTodos(removedArr)
     }
-   
-    console.log('onclick',todos)
-    const handleClick = (e) => {
-            var x = (todos.length + 1)
-            setTodos([...todos,{todo:todo,id:x,handleDelete:handleDelete}])
-    }
-
+  
+    const completeTodo = id => {
+      let updatedTodos = todos.map(todo => {
+        if (todo.id === id) {
+          todo.isComplete = !todo.isComplete;
+        }
+        return todo;
+      });
+      setTodos(updatedTodos);
+    };
     
   return (
-    <>
-    <form action="">
-    <input type="text" name="" id='' onChange={handleChange} />
-    <button type='button' onClick={handleClick}>Submit</button>
-    </form>
-    <h1>Todos</h1>
-    <Todo todos={todos}/>
-    </>
+    <div className='bigcontainer'>
+   <TodoForm
+   onSubmit={addTodo}
+   />
+    <h1 className='title'>Todos</h1>
+    <div className='todo-container'>
+    <Todo todos={todos}
+    completeTodo = {completeTodo}
+    removeTodo={removeTodo}
+    updateTodo={updateTodo}
+    />
+    </div>
+    </div>
   )
 }
 

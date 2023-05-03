@@ -1,20 +1,36 @@
 import React from 'react'
+import TodoForm from './TodoForm'
+import { useState } from 'react'
 
-const Todo = (props) => {
-    const z=props.todos
+const Todo = ({ todos, removeTodo, updateTodo, completeTodo }) => {
+    const [edit,setEdit] = useState({id:null, value:''})
+    
     
   
+    const submitUpdate =value => {
+        updateTodo(edit.id, value);
+        setEdit({
+            id:null,
+            value:''
+        })
+    }
 
-   const list = z.map((x) =>{
-    return <div key={x.id} >
-    <li>{x.todo}{x.id}</li>
-            <button id={x.id} onClick={x.handleDelete}>Delete</button>
-    </div>
-})
+if (edit.id){
+    return <TodoForm edit={edit} onSubmit={submitUpdate}/>;
+}
    return (
-    <div>
-        <h5>{list}</h5>
+            todos.map((todo,index) =>{ 
+   return <div key={index}
+        className={todo.isComplete ? 'todo-row complete' : 'todo-row'}>
+   <li style={{listStyle:'none'}}key={todo.id} onClick={() => completeTodo(todo.id)}>
+    {todo.text}
+    </li>
+    <div className='btn-container'>
+           <button id={todo.id} onClick={removeTodo} className='buttontodo'>Delete</button>
+           <button id={todo.id} onClick={()=> setEdit({id:todo.id, value: todo.text})} className='buttontodo'>Update</button>
     </div>
+   </div>
+})
   )
 }
 
